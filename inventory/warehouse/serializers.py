@@ -23,24 +23,42 @@ class BarangSerializer(serializers.ModelSerializer):
 
 class KategoriBarangSerializer(serializers.ModelSerializer):
     barang = BarangSerializer(many=True, read_only=True)
+    
     class Meta:
         model = KategoriBarang
         fields = ['id', 'nama', 'barang']
-        
+
+class DetailTransaksiSerializer(serializers.ModelSerializer):
+    nama_barang = serializers.CharField(source='barang.nama', read_only=True)
+
+    class Meta:
+        model = DetailTransaksi
+        fields = ['id', 'barang', 'nama_barang', 'jumlah']
+
 class TransaksiSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    detail = DetailTransaksiSerializer(many=True, read_only=True)
+    detail_input = DetailTransaksiSerializer(many=True, write_only=True)
 
     class Meta:
         model = Transaksi
-        fields = '__all__'
+        fields = ['id',  'tipe', 'tanggal', 'detail', 'detail_input']
 
-class DetailTransaksiSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DetailTransaksi
-        fields = '__all__'
+    def create(self, validated_data):
+        detail_data = validated_data.pop('detail_input')
+        transaksi = Transaksi.objects.create(**validated_data)
 
-    def validate(self, data):
-        """Pastikan stok cukup untuk transaksi keluar"""
-        if data['transaksi'].tipe == 'keluar' and data['barang'].stok < data['jumlah']:
-            raise serializers.ValidationError("Stok barang tidak mencukupi.")
-        return data
+        for detail in detail_data:
+            barang = detail['barang']
+            jumlah = detail['jumlah']
+
+            if transaksi.tipe == "keluar":
+                if barang.stok < jumlah:
+                    raise serializers.ValidationError({"detail": f"Stok barang {barang.nama} tidak cukup!"})
+                barang.stok -= jumlah
+            else:
+                barang.stok += jumlah
+
+            barang.save()
+            DetailTransaksi.objects.create(transaksi=transaksi, **detail)
+
+        return transaksi
