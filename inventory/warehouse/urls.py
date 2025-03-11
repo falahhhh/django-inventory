@@ -9,7 +9,7 @@ from .views import (
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
-    path('register/save', RegisterView.as_view(), name='register-save'),
+    
 
 
     path('barang/', BarangListCreateView.as_view(), name='barang-list'),
