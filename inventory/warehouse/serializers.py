@@ -50,6 +50,7 @@ class TransaksiSerializer(serializers.ModelSerializer):
         for detail in detail_data:
             barang = detail['barang']
             jumlah = detail['jumlah']
+            
 
             if transaksi.tipe == "keluar":
                 if barang.stok < jumlah:
