@@ -1,0 +1,71 @@
+# Bytecode Python
+__pycache__/
+*.py[cod]
+
+# Log dan file sementara
+*.log
+*.pot
+*.swp
+*.swo
+*.swn
+
+# File database lokal SQLite
+db.sqlite3
+db.sqlite3-journal
+
+# Virtual environment
+venv/
+env/
+*.env
+*.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Konfigurasi editor
+.vscode/
+.idea/
+*.iml
+
+# File sistem macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Konfigurasi OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# File sementara Django
+*.pyc
+*.pyo
+*.pyd
+
+# Folder migrations tetapi tetap menyertakan file migrasi yang diperlukan
+migrations/__pycache__/
+
+# Celery beat schedule file
+celerybeat-schedule
+
+# Media dan static files yang diunggah
+media/
+staticfiles/
+
+# File hasil testing
+coverage.xml
+nosetests.xml
+tests/__pycache__/
+
+# Node.js dependencies (jika menggunakan frontend dengan Node)
+node_modules/
+
+# File environment
+.env
+.envrc
+.secret
+config/settings/local.py
+
+# Dump database
+*.sql
+*.dump
